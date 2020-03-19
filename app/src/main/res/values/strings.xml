@@ -10,4 +10,5 @@
     <string name="dream_entry_2_button">DREAM ENTRY 2</string>
     <string name="dream_entry_3_button">DREAM ENTRY 3</string>
     <string name="dream_entry_4_button">DREAM DONE</string>
+    <string name="dream_date">Dream Date</string>
 </resources>

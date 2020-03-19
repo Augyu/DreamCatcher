@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
@@ -50,20 +51,29 @@ class DreamListFragment : Fragment() {
         dreamRecyclerView.adapter = adapter
     }
 
-    private inner class DreamHolder(view: View) : RecyclerView.ViewHolder(view) ,View.OnClickListener{
+    private inner class DreamHolder(view: View) : RecyclerView.ViewHolder(view),
+        View.OnClickListener {
         private lateinit var dream: Dream
-        val titleTextView: TextView = itemView.findViewById(R.id.dream_title)
-        val dateTextView: TextView = itemView.findViewById(R.id.dream_date)
+        private val titleTextView: TextView = itemView.findViewById(R.id.dream_title)
+        private val dateTextView: TextView = itemView.findViewById(R.id.dream_date)
+        private val realizedImageView: ImageView = itemView.findViewById(R.id.dream_realized)
+
         init {
             itemView.setOnClickListener(this)
         }
+
         fun bind(dream: Dream) {
             this.dream = dream
             titleTextView.text = this.dream.description
             dateTextView.text = this.dream.dateRevealed.toString()
+            realizedImageView.visibility = if (dream.isRealized) {
+                View.VISIBLE
+            } else {
+                View.GONE
+            }
         }
 
-        override fun onClick(v:View){
+        override fun onClick(v: View) {
             Toast.makeText(context, "${dream.description} pressed!", Toast.LENGTH_SHORT).show()
         }
     }
