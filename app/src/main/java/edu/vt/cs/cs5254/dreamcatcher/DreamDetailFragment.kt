@@ -35,9 +35,9 @@ class DreamDetailFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.dream_detail_fragment, container, false)
-        titleField = view.findViewById(R.id.dream_title) as EditText
-        entryButton = view.findViewById(R.id.dream_entry_1_button) as Button
-        realizedCheckBox = view.findViewById(R.id.dream_realized) as CheckBox
+        titleField = view.findViewById(R.id.dream_title)
+        entryButton = view.findViewById(R.id.dream_entry_1_button)
+        realizedCheckBox = view.findViewById(R.id.dream_realized)
         entryButton.apply{
             text = dream.dateRevealed.toString()
             isEnabled = false
@@ -55,7 +55,7 @@ class DreamDetailFragment : Fragment() {
         super.onStart()
         val titleWatcher = object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+//                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
@@ -63,7 +63,7 @@ class DreamDetailFragment : Fragment() {
             }
 
             override fun afterTextChanged(s: Editable?) {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+//                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
             }
         }
         titleField.addTextChangedListener(titleWatcher)
