@@ -37,7 +37,7 @@ class DreamDetailFragment : Fragment() {
         val view = inflater.inflate(R.layout.dream_detail_fragment, container, false)
         titleField = view.findViewById(R.id.dream_title)
         entryButton = view.findViewById(R.id.dream_entry_1_button)
-        realizedCheckBox = view.findViewById(R.id.dream_realized)
+        realizedCheckBox = view.findViewById(R.id.dream_realized_icon)
         entryButton.apply{
             text = dream.dateRevealed.toString()
             isEnabled = false

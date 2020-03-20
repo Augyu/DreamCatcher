@@ -16,7 +16,7 @@
         android:text="@string/dream_title_label"
         android:textColor="@android:color/black"
         android:textSize="18sp"
-        app:layout_constraintEnd_toStartOf="@+id/dream_realized"
+        app:layout_constraintEnd_toStartOf="@+id/dream_realized_icon"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -30,12 +30,12 @@
         android:layout_marginBottom="8dp"
         android:text="@string/dream_date"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/dream_realized"
+        app:layout_constraintEnd_toStartOf="@+id/dream_realized_icon"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/dream_title" />
 
     <ImageView
-        android:id="@+id/dream_realized"
+        android:id="@+id/dream_realized_icon"
         android:layout_width="46dp"
         android:layout_height="50dp"
         android:layout_marginTop="16dp"

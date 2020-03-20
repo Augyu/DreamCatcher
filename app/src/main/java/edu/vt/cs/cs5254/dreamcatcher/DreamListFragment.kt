@@ -10,25 +10,27 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import edu.vt.cs.cs5254.dreamcatcher.database.Dream
+import java.security.acl.Owner
 
 private const val TAG = "DreamListFragment"
 
 class DreamListFragment : Fragment() {
     private lateinit var dreamRecyclerView: RecyclerView
-    private var adapter: DreamAdapter? = null
-    private lateinit var viewModel: DreamListViewModel
+    private var adapter: DreamAdapter? = DreamAdapter(emptyList())
+//    private lateinit var viewModel: DreamListViewModel
     private val dreamListViewModel: DreamListViewModel by lazy {
         ViewModelProvider(this).get(DreamListViewModel::class.java)
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        Log.d(TAG, "Total dreams ${dreamListViewModel.dreams.size}")
-    }
+//    override fun onCreate(savedInstanceState: Bundle?) {
+//        super.onCreate(savedInstanceState)
+//        Log.d("test", "Total dreams")
+//    }
 
     companion object {
         fun newInstance() = DreamListFragment()
@@ -41,12 +43,11 @@ class DreamListFragment : Fragment() {
         val view = inflater.inflate(R.layout.dream_list_fragment, container, false)
         dreamRecyclerView = view.findViewById(R.id.dream_recycler_view) as RecyclerView
         dreamRecyclerView.layoutManager = LinearLayoutManager(context)
-        updateUI()
+        dreamRecyclerView.adapter = adapter
         return view
     }
 
-    private fun updateUI() {
-        val dreams = dreamListViewModel.dreams
+    private fun updateUI(dreams: List<Dream>) {
         adapter = DreamAdapter(dreams)
         dreamRecyclerView.adapter = adapter
     }
@@ -56,7 +57,7 @@ class DreamListFragment : Fragment() {
         private lateinit var dream: Dream
         private val titleTextView: TextView = itemView.findViewById(R.id.dream_title)
         private val dateTextView: TextView = itemView.findViewById(R.id.dream_date)
-        private val realizedImageView: ImageView = itemView.findViewById(R.id.dream_realized)
+        private val realizedImageView: ImageView = itemView.findViewById(R.id.dream_realized_icon)
 
         init {
             itemView.setOnClickListener(this)
@@ -78,6 +79,18 @@ class DreamListFragment : Fragment() {
         }
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        dreamListViewModel.dreamsListLiveData.observe(
+            viewLifecycleOwner,
+            Observer { dreams ->
+                dreams?.let {
+                    Log.i (TAG, "Got dreams $(dreams.size")
+                    updateUI(dreams)
+                }
+            }
+        )
+    }
     private inner class DreamAdapter(var dreams: List<Dream>) :
         RecyclerView.Adapter<DreamHolder>() {
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DreamHolder {
@@ -95,8 +108,11 @@ class DreamListFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProviders.of(this).get(DreamListViewModel::class.java)
+//        viewModel = ViewModelProviders.of(this).get(DreamListViewModel::class.java)
         // TODO: Use the ViewModel
+//        dreamListViewModel.dreams.observe(viewLifecycleOwner, Observer {
+//            Log.d("test", "observer")
+//        })
     }
 
 }

@@ -25,6 +25,6 @@ data class Dream(@PrimaryKey val id: UUID = UUID.randomUUID(),
 data class DreamEntry(@PrimaryKey val id: UUID = UUID.randomUUID(),
                       val dateCreated: Date = Date(),
                       val comment: String = "",
-//                      val kind: DreamEntryKind = DreamEntryKind.COMMENT,
+                      val kind: DreamEntryKind = DreamEntryKind.COMMENT,
                       val dreamId: UUID
 )
