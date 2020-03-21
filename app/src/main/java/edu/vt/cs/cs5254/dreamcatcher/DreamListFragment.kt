@@ -1,8 +1,10 @@
 package edu.vt.cs.cs5254.dreamcatcher
 
+import android.content.Context
 import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.util.Log
+import android.view.ContextMenu
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -16,24 +18,34 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import edu.vt.cs.cs5254.dreamcatcher.database.Dream
 import java.security.acl.Owner
+import java.util.*
 
 private const val TAG = "DreamListFragment"
 
 class DreamListFragment : Fragment() {
     private lateinit var dreamRecyclerView: RecyclerView
     private var adapter: DreamAdapter? = DreamAdapter(emptyList())
-//    private lateinit var viewModel: DreamListViewModel
+    //    private lateinit var viewModel: DreamListViewModel
     private val dreamListViewModel: DreamListViewModel by lazy {
         ViewModelProvider(this).get(DreamListViewModel::class.java)
     }
+    private var callbacks: Callbacks? = null
 
-//    override fun onCreate(savedInstanceState: Bundle?) {
-//        super.onCreate(savedInstanceState)
-//        Log.d("test", "Total dreams")
-//    }
+        override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        Log.d("test", "Total dreams")
+    }
+    interface Callbacks {
+        fun onDreamSelected(dreamId: UUID)
+    }
 
     companion object {
         fun newInstance() = DreamListFragment()
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        callbacks = context as Callbacks?
     }
 
     override fun onCreateView(
@@ -75,7 +87,12 @@ class DreamListFragment : Fragment() {
         }
 
         override fun onClick(v: View) {
-            Toast.makeText(context, "${dream.description} pressed!", Toast.LENGTH_SHORT).show()
+//            val fragment = DreamDetailFragment.newInstance(dream.id)
+//            val fm = activity.supportFragmentManager
+//            fm.beginTransaction()
+//                .replace(R.id.fragment_container, fragment)
+//                .commit()
+            callbacks?.onDreamSelected(dream.id)
         }
     }
 
@@ -85,12 +102,18 @@ class DreamListFragment : Fragment() {
             viewLifecycleOwner,
             Observer { dreams ->
                 dreams?.let {
-                    Log.i (TAG, "Got dreams $(dreams.size")
+                    Log.i(TAG, "Got dreams $(dreams.size)")
                     updateUI(dreams)
                 }
             }
         )
     }
+
+    override fun onDetach() {
+        super.onDetach()
+        callbacks = null
+    }
+
     private inner class DreamAdapter(var dreams: List<Dream>) :
         RecyclerView.Adapter<DreamHolder>() {
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DreamHolder {
@@ -115,4 +138,6 @@ class DreamListFragment : Fragment() {
 //        })
     }
 
+
 }
+
