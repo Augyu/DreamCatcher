@@ -1,40 +1,29 @@
 package edu.vt.cs.cs5254.dreamcatcher
 
 import android.content.Context
-import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
-import android.util.Log
-import android.view.ContextMenu
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import edu.vt.cs.cs5254.dreamcatcher.database.Dream
-import java.security.acl.Owner
+import java.text.DateFormat
 import java.util.*
-
-private const val TAG = "DreamListFragment"
 
 class DreamListFragment : Fragment() {
     private lateinit var dreamRecyclerView: RecyclerView
     private var adapter: DreamAdapter? = DreamAdapter(emptyList())
-    //    private lateinit var viewModel: DreamListViewModel
     private val dreamListViewModel: DreamListViewModel by lazy {
         ViewModelProvider(this).get(DreamListViewModel::class.java)
     }
     private var callbacks: Callbacks? = null
 
-        override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        Log.d("test", "Total dreams")
-    }
     interface Callbacks {
         fun onDreamSelected(dreamId: UUID)
     }
@@ -64,12 +53,12 @@ class DreamListFragment : Fragment() {
         dreamRecyclerView.adapter = adapter
     }
 
-    private inner class DreamHolder(view: View) : RecyclerView.ViewHolder(view),
+     inner class DreamHolder(view: View) : RecyclerView.ViewHolder(view),
         View.OnClickListener {
         private lateinit var dream: Dream
         private val titleTextView: TextView = itemView.findViewById(R.id.dream_title)
         private val dateTextView: TextView = itemView.findViewById(R.id.dream_date)
-        private val realizedImageView: ImageView = itemView.findViewById(R.id.dream_realized_icon)
+        private val dreamImageView: ImageView = itemView.findViewById(R.id.dream_realized_icon)
 
         init {
             itemView.setOnClickListener(this)
@@ -78,20 +67,24 @@ class DreamListFragment : Fragment() {
         fun bind(dream: Dream) {
             this.dream = dream
             titleTextView.text = this.dream.description
-            dateTextView.text = this.dream.dateRevealed.toString()
-            realizedImageView.visibility = if (dream.isRealized) {
-                View.VISIBLE
-            } else {
-                View.GONE
+            dateTextView.text = DateFormat.getDateInstance(DateFormat.MEDIUM).format(this.dream.dateRevealed)
+            when {
+                dream.isRealized -> {
+                    dreamImageView.setImageResource(R.drawable.dream_realized_icon)
+                    dreamImageView.tag = R.drawable.dream_realized_icon
+                }
+                dream.isDeferred -> {
+                    dreamImageView.setImageResource(R.drawable.dream_deferred_icon)
+                    dreamImageView.tag = R.drawable.dream_deferred_icon
+                }
+                else -> {
+                    dreamImageView.setImageResource(0)
+                    dreamImageView.tag = 0
+                }
             }
         }
 
         override fun onClick(v: View) {
-//            val fragment = DreamDetailFragment.newInstance(dream.id)
-//            val fm = activity.supportFragmentManager
-//            fm.beginTransaction()
-//                .replace(R.id.fragment_container, fragment)
-//                .commit()
             callbacks?.onDreamSelected(dream.id)
         }
     }
@@ -102,7 +95,6 @@ class DreamListFragment : Fragment() {
             viewLifecycleOwner,
             Observer { dreams ->
                 dreams?.let {
-                    Log.i(TAG, "Got dreams $(dreams.size)")
                     updateUI(dreams)
                 }
             }

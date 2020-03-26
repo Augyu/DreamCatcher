@@ -23,7 +23,7 @@
         android:layout_height="wrap_content">
 
         <CheckBox
-            android:id="@+id/dream_realized_icon"
+            android:id="@+id/dream_realized"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/dream_realized"
@@ -39,6 +39,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <TextView
@@ -51,11 +52,41 @@
         android:id="@+id/dream_entry_0_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/dream_entry_0_button" />
+        android:text="@string/dream_entry_0_button"
+        android:visibility="gone"
+        android:layout_margin="5dp"
+        />
+
     <Button
         android:id="@+id/dream_entry_1_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/dream_entry_1_button" />
+        android:text="@string/dream_entry_1_button"
+        android:layout_margin="5dp"
+        android:visibility="gone" />
+
+    <Button
+        android:id="@+id/dream_entry_2_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/dream_entry_2_button"
+        android:layout_margin="5dp"
+        android:visibility="gone" />
+
+    <Button
+        android:id="@+id/dream_entry_3_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/dream_entry_3_button"
+        android:layout_margin="5dp"
+        android:visibility="gone" />
+
+    <Button
+        android:id="@+id/dream_entry_4_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/dream_entry_4_button"
+        android:layout_margin="5dp"
+        android:visibility="gone" />
 
 </LinearLayout>

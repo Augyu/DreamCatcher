@@ -1,6 +1,5 @@
 package edu.vt.cs.cs5254.dreamcatcher.database
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.room.*
 import java.util.*
@@ -56,11 +55,10 @@ interface DreamDao {
 
     @Transaction
     fun reconstructSampleDatabase() {
-        Log.d("test", "test")
         deleteAllDreams()
 
         val dream0 = Dream(
-            description = "Dream #012345",
+            description = "Dream #0",
             isRealized = false
         )
         val dream0Entries = listOf(
