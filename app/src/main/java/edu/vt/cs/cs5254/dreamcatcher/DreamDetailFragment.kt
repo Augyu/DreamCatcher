@@ -12,11 +12,12 @@ import android.widget.CheckBox
 import android.widget.EditText
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import edu.vt.cs.cs5254.dreamcatcher.database.Dream
 import edu.vt.cs.cs5254.dreamcatcher.database.DreamEntry
 import edu.vt.cs.cs5254.dreamcatcher.database.DreamEntryKind
 import edu.vt.cs.cs5254.dreamcatcher.database.DreamWithEntries
-import kotlinx.android.synthetic.main.dream_detail_fragment.*
 import java.text.DateFormat
 import java.util.*
 
@@ -28,15 +29,18 @@ class DreamDetailFragment : Fragment() {
     private lateinit var dreamEntries: List<DreamEntry>
     private lateinit var dreamWithEntries: DreamWithEntries
     private lateinit var titleField: EditText
-    private lateinit var entryButton: Button
     private lateinit var realizedCheckBox: CheckBox
     private lateinit var deferredCheckbox: CheckBox
     private lateinit var viewModel: DreamDetailViewModel
-    private lateinit var dream_1_Button: Button
-    private lateinit var dream_2_Button: Button
-    private lateinit var dream_3_Button: Button
-    private lateinit var realizedButton: Button
-    private lateinit var detailButtons: List<Button>
+
+    private var adapter: DreamEntryAdapter? = DreamEntryAdapter(emptyList())
+    private lateinit var dreamEntryRecyclerView: RecyclerView
+
+    private var callbacks: Callbacks? = null
+    private val df = DateFormat.getDateInstance(DateFormat.MEDIUM)
+    interface Callbacks {
+        fun onDreamSelected(dreamId: UUID)
+    }
 
     private val dreamDetailViewModel: DreamDetailViewModel by lazy {
         ViewModelProviders.of(this).get(DreamDetailViewModel::class.java)
@@ -67,15 +71,11 @@ class DreamDetailFragment : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.dream_detail_fragment, container, false)
         titleField = view.findViewById(R.id.dream_title)
-        entryButton = view.findViewById(R.id.dream_entry_0_button)
         realizedCheckBox = view.findViewById(R.id.dream_realized)
         deferredCheckbox = view.findViewById(R.id.dream_deferred)
-        dream_1_Button = view.findViewById(R.id.dream_entry_1_button)
-        dream_2_Button = view.findViewById(R.id.dream_entry_2_button)
-        dream_3_Button = view.findViewById(R.id.dream_entry_3_button)
-        realizedButton = view.findViewById(R.id.dream_entry_4_button)
-        detailButtons =
-            listOf(entryButton, dream_1_Button, dream_2_Button, dream_3_Button, realizedButton)
+        dreamEntryRecyclerView = view.findViewById(R.id.dream_entry_recycle_view) as RecyclerView
+        dreamEntryRecyclerView.layoutManager = LinearLayoutManager(context)
+        dreamEntryRecyclerView.adapter = adapter
         return view
     }
 
@@ -87,6 +87,7 @@ class DreamDetailFragment : Fragment() {
                 dreamWithEntries?.let {
                     this.dreamWithEntries = it
                     updateUI()
+                    updateButtonUI()
                 }
             }
         )
@@ -132,6 +133,72 @@ class DreamDetailFragment : Fragment() {
         dreamDetailViewModel.saveDream()
     }
 
+    inner class DreamEntryHolder(view: View) : RecyclerView.ViewHolder(view),
+        View.OnClickListener {
+        private lateinit var dreamEntry: DreamEntry
+        private val buttonView: Button = itemView.findViewById(R.id.dream_entry_button)
+
+        init {
+            itemView.setOnClickListener(this)
+        }
+
+        fun bind(dreamEntry: DreamEntry) {
+            this.dreamEntry = dreamEntry
+            when (dreamEntry.kind){
+                DreamEntryKind.REVEALED -> {
+                    buttonView.apply{
+                        setText(dreamEntry.comment)
+                        setBackgroundColor(Color.YELLOW)
+                    }
+                }
+                DreamEntryKind.COMMENT -> {
+                    buttonView.apply{
+                        setText(dreamEntry.comment+'('+df.format(dreamEntry.dateCreated)+')')
+                        setBackgroundColor(Color.LTGRAY)
+                    }
+                }
+                DreamEntryKind.REALIZED -> {
+                    buttonView.apply{
+                        setText(dreamEntry.comment)
+                        setBackgroundColor(Color.GREEN)
+                    }
+                }
+                DreamEntryKind.DEFERRED -> {
+                    buttonView.apply{
+                        setText(dreamEntry.comment)
+                        setBackgroundColor(Color.RED)
+                        setTextColor(Color.WHITE)
+                    }
+                }
+            }
+        }
+
+        override fun onClick(v: View) {
+            callbacks?.onDreamSelected(dream.id)
+        }
+    }
+
+    private inner class DreamEntryAdapter(var dreamEntries: List<DreamEntry>) :
+        RecyclerView.Adapter<DreamEntryHolder>() {
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DreamEntryHolder {
+            val view = layoutInflater.inflate(R.layout.list_item_dream_entry, parent, false)
+            return DreamEntryHolder(view)
+        }
+
+        override fun getItemCount() = dreamEntries.size
+
+        override fun onBindViewHolder(holder: DreamEntryHolder, position: Int) {
+            val dreamEntry = dreamEntries[position]
+            holder.bind(dreamEntry)
+        }
+
+    }
+
+    private fun updateButtonUI() {
+        adapter = DreamEntryAdapter(dreamWithEntries.dreamEntries)
+        dreamEntryRecyclerView.adapter = adapter
+    }
+
     private fun updateUI() {
         titleField.setText(dreamWithEntries.dream.description)
         realizedCheckBox.apply {
@@ -142,43 +209,43 @@ class DreamDetailFragment : Fragment() {
             isChecked = dreamWithEntries.dream.isDeferred
             isEnabled = !dreamWithEntries.dream.isRealized
         }
-        dream_entry_4_button.apply{
-            visibility = View.GONE
-        }
+//        dream_entry_4_button.apply {
+//            visibility = View.GONE
+//        }
 
         val df = DateFormat.getDateInstance(DateFormat.MEDIUM)
 
-        dreamWithEntries.dreamEntries.forEachIndexed { i, entry ->
-            when (entry.kind) {
-                DreamEntryKind.REVEALED -> {
-                    dream_entry_0_button.apply {
-                        text = entry.comment
-                        visibility = View.VISIBLE
-                        setBackgroundColor(Color.YELLOW)
-                    }
-                }
-                DreamEntryKind.COMMENT -> {
-                    detailButtons[i].apply{
-                        text = entry.comment+ "(" + df.format(entry.dateCreated) + ")"
-                        visibility = View.VISIBLE
-                        setBackgroundColor(Color.LTGRAY)
-                    }
-                }
-                DreamEntryKind.REALIZED ->{
-                    dream_entry_4_button.apply {
-                        text = entry.comment
-                        visibility = View.VISIBLE
-                        setBackgroundColor(Color.GREEN)
-                    }
-                }
-                DreamEntryKind.DEFERRED ->{
-                    dream_entry_4_button.apply {
-                        text = entry.comment
-                        visibility = View.VISIBLE
-                        setBackgroundColor(Color.RED)
-                    }
-                }
-            }
-        }
+//        dreamWithEntries.dreamEntries.forEachIndexed { i, entry ->
+//            when (entry.kind) {
+//                DreamEntryKind.REVEALED -> {
+//                    dream_entry_0_button.apply {
+//                        text = entry.comment
+//                        visibility = View.VISIBLE
+//                        setBackgroundColor(Color.YELLOW)
+//                    }
+//                }
+//                DreamEntryKind.COMMENT -> {
+//                    detailButtons[i].apply {
+//                        text = entry.comment + "(" + df.format(entry.dateCreated) + ")"
+//                        visibility = View.VISIBLE
+//                        setBackgroundColor(Color.LTGRAY)
+//                    }
+//                }
+//                DreamEntryKind.REALIZED -> {
+//                    dream_entry_4_button.apply {
+//                        text = entry.comment
+//                        visibility = View.VISIBLE
+//                        setBackgroundColor(Color.GREEN)
+//                    }
+//                }
+//                DreamEntryKind.DEFERRED -> {
+//                    dream_entry_4_button.apply {
+//                        text = entry.comment
+//                        visibility = View.VISIBLE
+//                        setBackgroundColor(Color.RED)
+//                    }
+//                }
+//            }
+//        }
     }
 }
