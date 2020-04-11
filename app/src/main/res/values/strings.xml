@@ -11,4 +11,6 @@
     <string name="dream_entry_3_button">DREAM ENTRY 3</string>
     <string name="dream_entry_4_button">DREAM DONE</string>
     <string name="dream_date">Dream Date</string>
+    <string name="new_dream">Add Dream</string>
+    <string name="delete_all_dreams">Delete All Crimes</string>
 </resources>

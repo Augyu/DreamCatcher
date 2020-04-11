@@ -136,37 +136,37 @@ interface DreamDao {
         )
         addDreamWithEntries(DreamWithEntries(dream2, dream2Entries))
 
-        for (i in 3..50) {
-            val dream =
-                Dream(
-                    description = "Dream #$i",
-                    isDeferred = (i % 3 == 1),
-                    isRealized = (i % 3 == 2)
-                )
-            var entries = listOf(
-                DreamEntry(
-                    dreamId = dream.id,
-                    kind = DreamEntryKind.REVEALED,
-                    comment = "Dream Revealed"
-                )
-            )
-            if (dream.isDeferred) {
-                entries = entries + DreamEntry(
-                    dreamId = dream.id,
-                    kind = DreamEntryKind.DEFERRED,
-                    comment = "Dream Deferred"
-                )
-            }
-            if (dream.isRealized) {
-                entries = entries + DreamEntry(
-                    dreamId = dream.id,
-                    kind = DreamEntryKind.REALIZED,
-                    comment = "Dream Realized"
-                )
-            }
-
-            addDreamWithEntries(DreamWithEntries(dream, entries))
-        }
+//        for (i in 3..50) {
+//            val dream =
+//                Dream(
+//                    description = "Dream #$i",
+//                    isDeferred = (i % 3 == 1),
+//                    isRealized = (i % 3 == 2)
+//                )
+//            var entries = listOf(
+//                DreamEntry(
+//                    dreamId = dream.id,
+//                    kind = DreamEntryKind.REVEALED,
+//                    comment = "Dream Revealed"
+//                )
+//            )
+//            if (dream.isDeferred) {
+//                entries = entries + DreamEntry(
+//                    dreamId = dream.id,
+//                    kind = DreamEntryKind.DEFERRED,
+//                    comment = "Dream Deferred"
+//                )
+//            }
+//            if (dream.isRealized) {
+//                entries = entries + DreamEntry(
+//                    dreamId = dream.id,
+//                    kind = DreamEntryKind.REALIZED,
+//                    comment = "Dream Realized"
+//                )
+//            }
+//
+//            addDreamWithEntries(DreamWithEntries(dream, entries))
+//        }
     }
 
 }

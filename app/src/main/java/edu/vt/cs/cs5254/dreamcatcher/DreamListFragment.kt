@@ -2,9 +2,7 @@ package edu.vt.cs.cs5254.dreamcatcher
 
 import android.content.Context
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
@@ -32,9 +30,35 @@ class DreamListFragment : Fragment() {
         fun newInstance() = DreamListFragment()
     }
 
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater.inflate(R.menu.fragment_dream_list, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.new_dream -> {
+                val dream = Dream()
+                dreamListViewModel.addDream(dream)
+                callbacks?.onDreamSelected(dream.id)
+                true
+            }
+            R.id.delete_all_crimes -> {
+                dreamListViewModel.deleteAllDreams()
+                true
+            }
+            else -> return super.onOptionsItemSelected(item)
+        }
+    }
+
     override fun onAttach(context: Context) {
         super.onAttach(context)
         callbacks = context as Callbacks?
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
     }
 
     override fun onCreateView(
@@ -53,7 +77,7 @@ class DreamListFragment : Fragment() {
         dreamRecyclerView.adapter = adapter
     }
 
-     inner class DreamHolder(view: View) : RecyclerView.ViewHolder(view),
+    inner class DreamHolder(view: View) : RecyclerView.ViewHolder(view),
         View.OnClickListener {
         private lateinit var dream: Dream
         private val titleTextView: TextView = itemView.findViewById(R.id.dream_title)
@@ -67,7 +91,8 @@ class DreamListFragment : Fragment() {
         fun bind(dream: Dream) {
             this.dream = dream
             titleTextView.text = this.dream.description
-            dateTextView.text = DateFormat.getDateInstance(DateFormat.MEDIUM).format(this.dream.dateRevealed)
+            dateTextView.text =
+                DateFormat.getDateInstance(DateFormat.MEDIUM).format(this.dream.dateRevealed)
             when {
                 dream.isRealized -> {
                     dreamImageView.setImageResource(R.drawable.dream_realized_icon)

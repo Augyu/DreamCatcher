@@ -6,9 +6,7 @@ import androidx.lifecycle.LiveData
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
-import edu.vt.cs.cs5254.dreamcatcher.database.Dream
-import edu.vt.cs.cs5254.dreamcatcher.database.DreamDatabase
-import edu.vt.cs.cs5254.dreamcatcher.database.DreamWithEntries
+import edu.vt.cs.cs5254.dreamcatcher.database.*
 import java.util.*
 import java.util.concurrent.Executors
 
@@ -29,7 +27,7 @@ class DreamRepository private constructor(context: Context) {
             }
         }
 
-    private val database : DreamDatabase = Room.databaseBuilder(
+    private val database: DreamDatabase = Room.databaseBuilder(
         context.applicationContext,
         DreamDatabase::class.java,
         DATABASE_NAME
@@ -38,6 +36,26 @@ class DreamRepository private constructor(context: Context) {
     private val dreamDao = database.dreamDao()
 
     private val executor = Executors.newSingleThreadExecutor()
+
+    fun addDream(dream: Dream) {
+        val dreamEntries = listOf(
+            DreamEntry(
+                dreamId = dream.id,
+                kind = DreamEntryKind.REVEALED,
+                comment = "Dream Revealed"
+            )
+        )
+        executor.execute {
+            dreamDao.addDreamWithEntries(DreamWithEntries(dream, dreamEntries))
+        }
+    }
+
+    fun deleteAllDreamsInDatabase() {
+        executor.execute {
+            dreamDao.deleteAllDreams()
+            dreamDao.deleteAllDreamEntries()
+        }
+    }
 
     fun getDreams(): LiveData<List<Dream>> = dreamDao.getDreams()
 
@@ -65,8 +83,7 @@ class DreamRepository private constructor(context: Context) {
 
         fun get(): DreamRepository {
             Log.d("test", "init repo")
-            return INSTANCE ?:
-            throw IllegalStateException("DreamRepository must be initialized")
+            return INSTANCE ?: throw IllegalStateException("DreamRepository must be initialized")
         }
     }
 }
