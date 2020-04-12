@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import edu.vt.cs.cs5254.dreamcatcher.database.DreamEntry
 import edu.vt.cs.cs5254.dreamcatcher.database.DreamEntryKind
 import edu.vt.cs.cs5254.dreamcatcher.database.DreamWithEntries
+import java.io.File
 import java.util.*
 
 class DreamDetailViewModel : ViewModel() {
@@ -60,5 +61,9 @@ class DreamDetailViewModel : ViewModel() {
 
     fun updateDreamWithEntry(dreamWithEntries: DreamWithEntries) {
         dreamRepository.updateDreamWithEntries(dreamWithEntries)
+    }
+
+    fun getPhotoFile(dreamWithEntries: DreamWithEntries): File {
+        return dreamRepository.getPhotoFile(dreamWithEntries.dream)
     }
 }
