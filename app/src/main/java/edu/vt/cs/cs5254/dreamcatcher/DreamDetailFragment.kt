@@ -15,6 +15,7 @@ import android.widget.ImageView
 import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import edu.vt.cs.cs5254.dreamcatcher.database.DreamEntry
@@ -99,6 +100,8 @@ class DreamDetailFragment : Fragment() {
         photoView = view.findViewById(R.id.dream_photo) as ImageView
         dreamEntryRecyclerView.layoutManager = LinearLayoutManager(context)
         dreamEntryRecyclerView.adapter = adapter
+        val itemTouchHelper = ItemTouchHelper(SwipeToDeleteCallback())
+        itemTouchHelper.attachToRecyclerView(dreamEntryRecyclerView)
         return view
     }
 
@@ -252,6 +255,33 @@ class DreamDetailFragment : Fragment() {
             holder.bind(dreamEntry)
         }
 
+        fun deleteItem(position: Int) {
+            val dreamToDelete = dreamEntries[position]
+            Log.d("test", "${dreamEntries.size}")
+            if (dreamToDelete.kind == DreamEntryKind.COMMENT) {
+                dreamEntries = dreamEntries - dreamToDelete
+                dreamDetailViewModel.updateDreamEntries(dreamEntries)
+                notifyItemRemoved(position)
+            } else {
+                notifyItemChanged(position)
+            }
+        }
+    }
+
+    inner class SwipeToDeleteCallback :
+        ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
+        override fun onMove(
+            recyclerView: RecyclerView,
+            viewHolder: RecyclerView.ViewHolder,
+            target: RecyclerView.ViewHolder
+        ): Boolean {
+            return false
+        }
+
+        override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+            val position = viewHolder.adapterPosition
+            adapter?.deleteItem(position)
+        }
     }
 
     private fun updateButton() {
