@@ -14,4 +14,7 @@
     <string name="new_dream">Add Dream</string>
     <string name="delete_all_dreams">Delete All Crimes</string>
     <string name="take_dream_photo">Take Dream Photo</string>
+    <string name="share_dream">Share Dream</string>
+    <string name="dream_report_subject">Dream Report</string>
+    <string name="send_report">Send Report</string>
 </resources>

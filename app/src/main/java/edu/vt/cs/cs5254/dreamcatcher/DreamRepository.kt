@@ -53,7 +53,7 @@ class DreamRepository private constructor(context: Context) {
         }
     }
 
-    fun deleteAllDreamsInDatabase() {
+    fun deleteAllDreams() {
         executor.execute {
             dreamDao.deleteAllDreams()
             dreamDao.deleteAllDreamEntries()

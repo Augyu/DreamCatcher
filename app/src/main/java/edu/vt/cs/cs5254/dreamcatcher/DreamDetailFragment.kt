@@ -1,5 +1,6 @@
 package edu.vt.cs.cs5254.dreamcatcher
 
+import android.content.Intent
 import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
@@ -58,6 +59,7 @@ class DreamDetailFragment : Fragment() {
         override fun afterTextChanged(s: Editable?) {
         }
     }
+
     interface Callbacks {
         fun onDreamSelected(dreamId: UUID)
     }
@@ -92,25 +94,28 @@ class DreamDetailFragment : Fragment() {
         titleField = view.findViewById(R.id.dream_title)
         realizedCheckBox = view.findViewById(R.id.dream_realized)
         deferredCheckbox = view.findViewById(R.id.dream_deferred)
-        dreamEntryRecyclerView = view.findViewById(R.id.dream_entry_recycle_view) as RecyclerView
+        dreamEntryRecyclerView = view.findViewById(R.id.dream_entry_recycler_view) as RecyclerView
         dreamIcon = view.findViewById(R.id.dream_icon)
         photoView = view.findViewById(R.id.dream_photo) as ImageView
         dreamEntryRecyclerView.layoutManager = LinearLayoutManager(context)
         dreamEntryRecyclerView.adapter = adapter
         return view
     }
+
     // options menu methods
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
         inflater.inflate(R.menu.fragment_dream, menu)
         val cameraAvailable = CameraUtil.isCameraAvailable(requireActivity())
         val menuItem = menu.findItem(R.id.take_dream_photo)
+        val menuShare = menu.findItem(R.id.share_dream)
         menuItem.apply {
             Log.d(TAG, "Camera available: $cameraAvailable")
             isEnabled = cameraAvailable
             isVisible = cameraAvailable
         }
     }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.take_dream_photo -> {
@@ -119,9 +124,25 @@ class DreamDetailFragment : Fragment() {
                 startActivity(captureImageIntent)
                 true
             }
+            R.id.share_dream -> {
+                Intent(Intent.ACTION_SEND).apply {
+                    type = "text/plain"
+                    putExtra(Intent.EXTRA_TEXT, getDreamReport())
+                    putExtra(
+                        Intent.EXTRA_SUBJECT,
+                        getString(R.string.dream_report_subject)
+                    ).also { intent ->
+                        val chooserIntent =
+                            Intent.createChooser(intent, getString(R.string.send_report))
+                        startActivity(chooserIntent)
+                    }
+                }
+                true
+            }
             else -> return super.onOptionsItemSelected(item)
         }
     }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         dreamDetailViewModel.dreamLiveData.observe(
@@ -130,7 +151,11 @@ class DreamDetailFragment : Fragment() {
                 dreamWithEntries?.let {
                     this.dreamWithEntries = it
                     photoFile = dreamDetailViewModel.getPhotoFile(dreamWithEntries)
-                    photoUri = FileProvider.getUriForFile(requireActivity(),"edu.vt.cs.cs5254.dreamcatcher.fileprovider",photoFile)
+                    photoUri = FileProvider.getUriForFile(
+                        requireActivity(),
+                        "edu.vt.cs.cs5254.dreamcatcher.fileprovider",
+                        photoFile
+                    )
                     updateUI()
                 }
             }
@@ -261,13 +286,21 @@ class DreamDetailFragment : Fragment() {
         updatePhotoView()
         updateButton()
     }
-    private fun updatePhotoView(){
-        if(photoFile.exists()){
+
+    private fun updatePhotoView() {
+        if (photoFile.exists()) {
             val bitmap = CameraUtil.getScaledBitmap(photoFile.path, requireActivity())
             photoView.setImageBitmap(bitmap)
-        }else{
+        } else {
             photoView.setImageDrawable(null)
         }
     }
 
+    private fun getDreamReport(): String {
+        var report = "# " + dreamWithEntries.dream.description + "\n"
+        dreamWithEntries.dreamEntries.forEach {
+            report += it.comment + " (" + df.format(it.dateCreated) + ")\n"
+        }
+        return report
+    }
 }
