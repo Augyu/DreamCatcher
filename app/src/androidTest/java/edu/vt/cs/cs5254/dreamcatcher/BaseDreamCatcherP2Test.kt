@@ -9,12 +9,12 @@ import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.action.ViewActions.click
-import androidx.test.espresso.action.ViewActions.replaceText
+import androidx.test.espresso.action.ViewActions.*
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.contrib.DrawerActions
 import androidx.test.espresso.contrib.DrawerMatchers.isOpen
 import androidx.test.espresso.contrib.NavigationViewActions
+import androidx.test.espresso.contrib.RecyclerViewActions.actionOnItemAtPosition
 import androidx.test.espresso.intent.Intents.intended
 import androidx.test.espresso.intent.Intents.intending
 import androidx.test.espresso.intent.matcher.IntentMatchers.*
@@ -189,95 +189,95 @@ class BaseDreamCatcherPart2Test {
         onView(withId(R.id.take_dream_photo)).perform(click())
         intended(hasAction(MediaStore.ACTION_IMAGE_CAPTURE))
     }
-//
-//    @Test
-//    fun createDreamAndComments_CheckComments() {
-//        // create dream "My Dream"
-//        // create "Comment 1" and "Comment 2"
-//        // select realized
-//        // check comments
-//        onView(withId(R.id.new_dream)).perform(click())
-//        onView(withId(R.id.dream_title)).perform(replaceText("My Dream"))
-//        Espresso.closeSoftKeyboard()
-//        onView(withId(R.id.add_comment_fab)).perform(click())
-//        onView(withId(R.id.comment_text)).perform(replaceText("Comment 1"))
-//        onView(withText(android.R.string.ok)).perform(click())
-//        onView(withId(R.id.add_comment_fab)).perform(click())
-//        onView(withId(R.id.comment_text)).perform(replaceText("Comment 2"))
-//        onView(withText(android.R.string.ok)).perform(click())
-//        onView(withId(R.id.dream_realized)).perform(click())
-//        onView(withId(R.id.dream_entry_recycler_view))
-//            .check(
-//                matches(
-//                    atPosition(
-//                        1, hasDescendant(
-//                            withText(containsString("Comment 1"))
-//                        )
-//                    )
-//                )
-//            )
-//        onView(withId(R.id.dream_entry_recycler_view))
-//            .check(
-//                matches(
-//                    atPosition(
-//                        2, hasDescendant(
-//                            withText(containsString("Comment 2"))
-//                        )
-//                    )
-//                )
-//            )
-//    }
 
-//    @Test
-//    fun createDreamAndCommentsDeleteComment_CheckEntries() {
-//        // create dream "My Dream"
-//        // create "Comment 1" and "Comment 2"
-//        // select realized
-//        // swipe to delete comment 2
-//        // check entries
-//        onView(withId(R.id.new_dream)).perform(click())
-//        onView(withId(R.id.dream_title)).perform(replaceText("My Dream"))
-//        Espresso.closeSoftKeyboard()
-//        onView(withId(R.id.add_comment_fab)).perform(click())
-//        onView(withId(R.id.comment_text)).perform(replaceText("Comment 1"))
-//        onView(withText(android.R.string.ok)).perform(click())
-//        onView(withId(R.id.add_comment_fab)).perform(click())
-//        onView(withId(R.id.comment_text)).perform(replaceText("Comment 2"))
-//        onView(withText(android.R.string.ok)).perform(click())
-//        onView(withId(R.id.dream_realized)).perform(click())
-//
-//        // swipe left to delete
-//        onView(withId(R.id.dream_entry_recycler_view)).perform(
-//            actionOnItemAtPosition<RecyclerView.ViewHolder>(
-//                2,
-//                swipeLeft()
-//            )
-//        )
-//        onView(withId(R.id.dream_entry_recycler_view))
-//            .check(
-//                matches(
-//                    atPosition(
-//                        1, hasDescendant(
-//                            withText(containsString("Comment 1"))
-//                        )
-//                    )
-//                )
-//            )
-//        onView(withId(R.id.dream_entry_recycler_view))
-//            .check(
-//                matches(
-//                    atPosition(
-//                        2, hasDescendant(
-//                            anyOf(
-//                                withText(containsString("Realized")),
-//                                withText(containsString("realized")),
-//                                withText(containsString("REALIZED"))
-//                            )
-//                        )
-//                    )
-//                )
-//            )
-//    }
+    @Test
+    fun createDreamAndComments_CheckComments() {
+        // create dream "My Dream"
+        // create "Comment 1" and "Comment 2"
+        // select realized
+        // check comments
+        onView(withId(R.id.new_dream)).perform(click())
+        onView(withId(R.id.dream_title)).perform(replaceText("My Dream"))
+        Espresso.closeSoftKeyboard()
+        onView(withId(R.id.add_comment_fab)).perform(click())
+        onView(withId(R.id.comment_text)).perform(replaceText("Comment 1"))
+        onView(withText(android.R.string.ok)).perform(click())
+        onView(withId(R.id.add_comment_fab)).perform(click())
+        onView(withId(R.id.comment_text)).perform(replaceText("Comment 2"))
+        onView(withText(android.R.string.ok)).perform(click())
+        onView(withId(R.id.dream_realized)).perform(click())
+        onView(withId(R.id.dream_entry_recycler_view))
+            .check(
+                matches(
+                    atPosition(
+                        1, hasDescendant(
+                            withText(containsString("Comment 1"))
+                        )
+                    )
+                )
+            )
+        onView(withId(R.id.dream_entry_recycler_view))
+            .check(
+                matches(
+                    atPosition(
+                        2, hasDescendant(
+                            withText(containsString("Comment 2"))
+                        )
+                    )
+                )
+            )
+    }
+
+    @Test
+    fun createDreamAndCommentsDeleteComment_CheckEntries() {
+        // create dream "My Dream"
+        // create "Comment 1" and "Comment 2"
+        // select realized
+        // swipe to delete comment 2
+        // check entries
+        onView(withId(R.id.new_dream)).perform(click())
+        onView(withId(R.id.dream_title)).perform(replaceText("My Dream"))
+        Espresso.closeSoftKeyboard()
+        onView(withId(R.id.add_comment_fab)).perform(click())
+        onView(withId(R.id.comment_text)).perform(replaceText("Comment 1"))
+        onView(withText(android.R.string.ok)).perform(click())
+        onView(withId(R.id.add_comment_fab)).perform(click())
+        onView(withId(R.id.comment_text)).perform(replaceText("Comment 2"))
+        onView(withText(android.R.string.ok)).perform(click())
+        onView(withId(R.id.dream_realized)).perform(click())
+
+        // swipe left to delete
+        onView(withId(R.id.dream_entry_recycler_view)).perform(
+            actionOnItemAtPosition<RecyclerView.ViewHolder>(
+                2,
+                swipeLeft()
+            )
+        )
+        onView(withId(R.id.dream_entry_recycler_view))
+            .check(
+                matches(
+                    atPosition(
+                        1, hasDescendant(
+                            withText(containsString("Comment 1"))
+                        )
+                    )
+                )
+            )
+        onView(withId(R.id.dream_entry_recycler_view))
+            .check(
+                matches(
+                    atPosition(
+                        2, hasDescendant(
+                            anyOf(
+                                withText(containsString("Realized")),
+                                withText(containsString("realized")),
+                                withText(containsString("REALIZED"))
+                            )
+                        )
+                    )
+                )
+            )
+    }
 
     @Test
     fun selectHomeIconAndDeferredFilter_CheckDeferredSelected() {

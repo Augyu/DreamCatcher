@@ -13,11 +13,13 @@ import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.ImageView
 import androidx.core.content.FileProvider
+import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import edu.vt.cs.cs5254.dreamcatcher.database.DreamEntry
 import edu.vt.cs.cs5254.dreamcatcher.database.DreamEntryKind
 import edu.vt.cs.cs5254.dreamcatcher.database.DreamWithEntries
@@ -29,7 +31,13 @@ import java.util.*
 private const val ARG_DREAM_ID = "dream_id"
 private const val TAG = "DreamFragment"
 
-class DreamDetailFragment : Fragment() {
+class DreamDetailFragment : Fragment(), AddDreamEntryFragment.Callbacks {
+    override fun onCommentCreated(comment: String, createDate: Date) {
+        Log.d("test", "detailfrag $comment, $createDate")
+
+        dreamWithEntries.dreamEntries += DreamEntry(dreamId = dreamWithEntries.dream.id, comment=comment,dateCreated = createDate)
+        viewModel.updateDreamEntries(dreamWithEntries.dreamEntries)
+    }
 
     //model fields
     private lateinit var dreamWithEntries: DreamWithEntries
@@ -45,7 +53,7 @@ class DreamDetailFragment : Fragment() {
     private var adapter: DreamEntryAdapter? = DreamEntryAdapter(emptyList())
     private lateinit var dreamEntryRecyclerView: RecyclerView
     private lateinit var photoView: ImageView
-
+    private lateinit var addCommentFab: FloatingActionButton
     private var callbacks: Callbacks? = null
     private val df = DateFormat.getDateInstance(DateFormat.MEDIUM)
 
@@ -102,6 +110,7 @@ class DreamDetailFragment : Fragment() {
         dreamEntryRecyclerView.adapter = adapter
         val itemTouchHelper = ItemTouchHelper(SwipeToDeleteCallback())
         itemTouchHelper.attachToRecyclerView(dreamEntryRecyclerView)
+        addCommentFab = view.findViewById(R.id.add_comment_fab)
         return view
     }
 
@@ -187,6 +196,12 @@ class DreamDetailFragment : Fragment() {
                 viewModel.deferredCheckboxUpdate(isChecked)
                 viewModel.updateDreamWithEntry(dreamWithEntries)
             }
+        }
+        addCommentFab.setOnClickListener {
+            val addCommentFragment: DialogFragment = AddDreamEntryFragment.newInstance()
+            addCommentFragment.setTargetFragment(this, 1)
+            addCommentFragment.show(parentFragmentManager, "dialog")
+
         }
     }
 
