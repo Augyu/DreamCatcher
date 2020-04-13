@@ -133,7 +133,7 @@ class DreamDetailFragment : Fragment() {
                     putExtra(Intent.EXTRA_TEXT, getDreamReport())
                     putExtra(
                         Intent.EXTRA_SUBJECT,
-                        getString(R.string.dream_report_subject)
+                        dreamWithEntries.dream.description
                     ).also { intent ->
                         val chooserIntent =
                             Intent.createChooser(intent, getString(R.string.send_report))

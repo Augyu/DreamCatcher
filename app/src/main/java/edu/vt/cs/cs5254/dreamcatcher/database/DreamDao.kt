@@ -56,85 +56,85 @@ interface DreamDao {
     @Transaction
     fun reconstructSampleDatabase() {
         deleteAllDreams()
-
-        val dream0 = Dream(
-            description = "Dream #0",
-            isRealized = false
-        )
-        val dream0Entries = listOf(
-            DreamEntry(
-                dreamId = dream0.id,
-                kind = DreamEntryKind.REVEALED,
-                comment = "Dream Revealed"
-            ),
-            DreamEntry(
-                dreamId = dream0.id,
-                kind = DreamEntryKind.COMMENT,
-                comment = "Dream 0 Entry 1"
-            )
-        )
-        addDreamWithEntries(DreamWithEntries(dream0, dream0Entries))
-
-
-        val dream1 = Dream(
-            description = "Dream #1",
-            isDeferred = true
-        )
-        val dream1Entries = listOf(
-            DreamEntry(
-                dreamId = dream1.id,
-                kind = DreamEntryKind.REVEALED,
-                comment = "Dream Revealed"
-            ),
-            DreamEntry(
-                dreamId = dream1.id,
-                kind = DreamEntryKind.COMMENT,
-                comment = "Dream 1 Entry 1"
-            ),
-            DreamEntry(
-                dreamId = dream1.id,
-                kind = DreamEntryKind.COMMENT,
-                comment = "Dream 1 Entry 2"
-            ),
-            DreamEntry(
-                dreamId = dream1.id,
-                kind = DreamEntryKind.DEFERRED,
-                comment = "Dream Deferred"
-            )
-        )
-        addDreamWithEntries(DreamWithEntries(dream1, dream1Entries))
-
-
-        val dream2 =
-            Dream(description = "Dream #2", isRealized = true)
-        val dream2Entries = listOf(
-            DreamEntry(
-                dreamId = dream2.id,
-                kind = DreamEntryKind.REVEALED,
-                comment = "Dream Revealed"
-            ),
-            DreamEntry(
-                dreamId = dream2.id,
-                kind = DreamEntryKind.COMMENT,
-                comment = "Dream 2 Entry 1"
-            ),
-            DreamEntry(
-                dreamId = dream2.id,
-                kind = DreamEntryKind.COMMENT,
-                comment = "Dream 2 Entry 2"
-            ),
-            DreamEntry(
-                dreamId = dream2.id,
-                kind = DreamEntryKind.COMMENT,
-                comment = "Dream 2 Entry 3"
-            ),
-            DreamEntry(
-                dreamId = dream2.id,
-                kind = DreamEntryKind.REALIZED,
-                comment = "Dream Realized"
-            )
-        )
-        addDreamWithEntries(DreamWithEntries(dream2, dream2Entries))
+//
+//        val dream0 = Dream(
+//            description = "Dream #0",
+//            isRealized = false
+//        )
+//        val dream0Entries = listOf(
+//            DreamEntry(
+//                dreamId = dream0.id,
+//                kind = DreamEntryKind.REVEALED,
+//                comment = "Dream Revealed"
+//            ),
+//            DreamEntry(
+//                dreamId = dream0.id,
+//                kind = DreamEntryKind.COMMENT,
+//                comment = "Dream 0 Entry 1"
+//            )
+//        )
+//        addDreamWithEntries(DreamWithEntries(dream0, dream0Entries))
+//
+//
+//        val dream1 = Dream(
+//            description = "Dream #1",
+//            isDeferred = true
+//        )
+//        val dream1Entries = listOf(
+//            DreamEntry(
+//                dreamId = dream1.id,
+//                kind = DreamEntryKind.REVEALED,
+//                comment = "Dream Revealed"
+//            ),
+//            DreamEntry(
+//                dreamId = dream1.id,
+//                kind = DreamEntryKind.COMMENT,
+//                comment = "Dream 1 Entry 1"
+//            ),
+//            DreamEntry(
+//                dreamId = dream1.id,
+//                kind = DreamEntryKind.COMMENT,
+//                comment = "Dream 1 Entry 2"
+//            ),
+//            DreamEntry(
+//                dreamId = dream1.id,
+//                kind = DreamEntryKind.DEFERRED,
+//                comment = "Dream Deferred"
+//            )
+//        )
+//        addDreamWithEntries(DreamWithEntries(dream1, dream1Entries))
+//
+//
+//        val dream2 =
+//            Dream(description = "Dream #2", isRealized = true)
+//        val dream2Entries = listOf(
+//            DreamEntry(
+//                dreamId = dream2.id,
+//                kind = DreamEntryKind.REVEALED,
+//                comment = "Dream Revealed"
+//            ),
+//            DreamEntry(
+//                dreamId = dream2.id,
+//                kind = DreamEntryKind.COMMENT,
+//                comment = "Dream 2 Entry 1"
+//            ),
+//            DreamEntry(
+//                dreamId = dream2.id,
+//                kind = DreamEntryKind.COMMENT,
+//                comment = "Dream 2 Entry 2"
+//            ),
+//            DreamEntry(
+//                dreamId = dream2.id,
+//                kind = DreamEntryKind.COMMENT,
+//                comment = "Dream 2 Entry 3"
+//            ),
+//            DreamEntry(
+//                dreamId = dream2.id,
+//                kind = DreamEntryKind.REALIZED,
+//                comment = "Dream Realized"
+//            )
+//        )
+//        addDreamWithEntries(DreamWithEntries(dream2, dream2Entries))
 
 //        for (i in 3..50) {
 //            val dream =

@@ -12,6 +12,9 @@ import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.action.ViewActions.replaceText
 import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.contrib.DrawerActions
+import androidx.test.espresso.contrib.DrawerMatchers.isOpen
+import androidx.test.espresso.contrib.NavigationViewActions
 import androidx.test.espresso.intent.Intents.intended
 import androidx.test.espresso.intent.Intents.intending
 import androidx.test.espresso.intent.matcher.IntentMatchers.*
@@ -186,7 +189,7 @@ class BaseDreamCatcherPart2Test {
         onView(withId(R.id.take_dream_photo)).perform(click())
         intended(hasAction(MediaStore.ACTION_IMAGE_CAPTURE))
     }
-
+//
 //    @Test
 //    fun createDreamAndComments_CheckComments() {
 //        // create dream "My Dream"
@@ -224,7 +227,7 @@ class BaseDreamCatcherPart2Test {
 //                )
 //            )
 //    }
-//
+
 //    @Test
 //    fun createDreamAndCommentsDeleteComment_CheckEntries() {
 //        // create dream "My Dream"
@@ -275,67 +278,67 @@ class BaseDreamCatcherPart2Test {
 //                )
 //            )
 //    }
-//
-//    @Test
-//    fun selectHomeIconAndDeferredFilter_CheckDeferredSelected() {
-//        // select home icon
-//        // select deferred filter
-//        // check if deferred filter is selected
-//        onView(withId(R.id.drawer_layout)).perform(DrawerActions.open())
-//        onView(withId(R.id.drawer_layout)).check(matches(isOpen()))
-//        onView(withId(R.id.nav_view))
-//            .perform(NavigationViewActions.navigateTo(R.id.nav_deferred_dreams))
-//        onView(withId(R.id.dream_recycler_view)).check(matches(isDisplayed()))
-//    }
-//
-//    @Test
-//    fun createDreamsRADROpenNavDrawerSelectRealized_CheckRealizedDreamsDisplayed() {
-//        // create dreams: realized - active - deferred - realized
-//        // in list view, open nav drawer
-//        // selected realized filter
-//        // check that only realized dreams are displayed
-//        onView(withId(R.id.new_dream)).perform(click())
-//        onView(withId(R.id.dream_title)).perform(replaceText("Realized 1"))
-//        Espresso.closeSoftKeyboard()
-//        onView(withId(R.id.dream_realized)).perform(click())
-//        Espresso.pressBack()
-//        onView(withId(R.id.new_dream)).perform(click())
-//        onView(withId(R.id.dream_title)).perform(replaceText("Active 1"))
-//        Espresso.closeSoftKeyboard()
-//        Espresso.pressBack()
-//        onView(withId(R.id.new_dream)).perform(click())
-//        onView(withId(R.id.dream_title)).perform(replaceText("Deferred 1"))
-//        Espresso.closeSoftKeyboard()
-//        onView(withId(R.id.dream_deferred)).perform(click())
-//        Espresso.pressBack()
-//        onView(withId(R.id.new_dream)).perform(click())
-//        onView(withId(R.id.dream_title)).perform(replaceText("Realized 2"))
-//        Espresso.closeSoftKeyboard()
-//        onView(withId(R.id.dream_realized)).perform(click())
-//        Espresso.pressBack()
-//        onView(withId(R.id.dream_recycler_view))
-//            .check(
-//                matches(
-//                    atPosition(
-//                        2,
-//                        hasDescendant(withText("Deferred 1"))
-//                    )
-//                )
-//            )
-//        onView(withId(R.id.drawer_layout)).perform(DrawerActions.open())
-//        onView(withId(R.id.drawer_layout)).check(matches(isOpen()))
-//        onView(withId(R.id.nav_view))
-//            .perform(NavigationViewActions.navigateTo(R.id.nav_realized_dreams))
-//        onView(withId(R.id.dream_recycler_view))
-//            .check(
-//                matches(
-//                    atPosition(
-//                        1,
-//                        hasDescendant(withText("Realized 2"))
-//                    )
-//                )
-//            )
-//    }
+
+    @Test
+    fun selectHomeIconAndDeferredFilter_CheckDeferredSelected() {
+        // select home icon
+        // select deferred filter
+        // check if deferred filter is selected
+        onView(withId(R.id.drawer_layout)).perform(DrawerActions.open())
+        onView(withId(R.id.drawer_layout)).check(matches(isOpen()))
+        onView(withId(R.id.nav_view))
+            .perform(NavigationViewActions.navigateTo(R.id.nav_deferred_dreams))
+        onView(withId(R.id.dream_recycler_view)).check(matches(isDisplayed()))
+    }
+
+    @Test
+    fun createDreamsRADROpenNavDrawerSelectRealized_CheckRealizedDreamsDisplayed() {
+        // create dreams: realized - active - deferred - realized
+        // in list view, open nav drawer
+        // selected realized filter
+        // check that only realized dreams are displayed
+        onView(withId(R.id.new_dream)).perform(click())
+        onView(withId(R.id.dream_title)).perform(replaceText("Realized 1"))
+        Espresso.closeSoftKeyboard()
+        onView(withId(R.id.dream_realized)).perform(click())
+        Espresso.pressBack()
+        onView(withId(R.id.new_dream)).perform(click())
+        onView(withId(R.id.dream_title)).perform(replaceText("Active 1"))
+        Espresso.closeSoftKeyboard()
+        Espresso.pressBack()
+        onView(withId(R.id.new_dream)).perform(click())
+        onView(withId(R.id.dream_title)).perform(replaceText("Deferred 1"))
+        Espresso.closeSoftKeyboard()
+        onView(withId(R.id.dream_deferred)).perform(click())
+        Espresso.pressBack()
+        onView(withId(R.id.new_dream)).perform(click())
+        onView(withId(R.id.dream_title)).perform(replaceText("Realized 2"))
+        Espresso.closeSoftKeyboard()
+        onView(withId(R.id.dream_realized)).perform(click())
+        Espresso.pressBack()
+        onView(withId(R.id.dream_recycler_view))
+            .check(
+                matches(
+                    atPosition(
+                        2,
+                        hasDescendant(withText("Deferred 1"))
+                    )
+                )
+            )
+        onView(withId(R.id.drawer_layout)).perform(DrawerActions.open())
+        onView(withId(R.id.drawer_layout)).check(matches(isOpen()))
+        onView(withId(R.id.nav_view))
+            .perform(NavigationViewActions.navigateTo(R.id.nav_realized_dreams))
+        onView(withId(R.id.dream_recycler_view))
+            .check(
+                matches(
+                    atPosition(
+                        1,
+                        hasDescendant(withText("Realized 2"))
+                    )
+                )
+            )
+    }
 
     companion object {
         private fun atPosition(
